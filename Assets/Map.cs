@@ -8,7 +8,10 @@ public class Map : MonoBehaviour {
 
 
 	//ATTRIBUTE NAMES
+	public static readonly string Lifespan = "Lifespan";
 	public static readonly string Hunger = "Hunger";
+	public static readonly string Thirst = "Thirst";
+	public static readonly string Mobile = "Mobile";
 
 
 	//SINGLETON

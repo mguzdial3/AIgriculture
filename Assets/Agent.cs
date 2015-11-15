@@ -15,7 +15,7 @@ public class Agent {
 
 		//Attributes Update
 		attributes = new Dictionary<string, int> ();
-		attributes.Add ("Lifespan", lifespan);
+		attributes.Add (Map.Lifespan, lifespan);
 
 		foreach (AbstractState state in states) {
 			foreach(string requirement in state.AttributesRequired){
