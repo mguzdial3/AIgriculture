@@ -19,6 +19,7 @@ public class Map : MonoBehaviour {
 
 	//Internal Map Representation
 	public Dictionary<Vector2, Tile> tiles;
+	public List<Agent> agents;
 
 	public int mapSize = 100;
 
@@ -52,7 +53,19 @@ public class Map : MonoBehaviour {
 		return possibleAdjacentTiles.ToArray ();
 	}
 
-
+//	public List<Agent> GetMapAgents() {
+//		List<Agent> agents = new List<Agent> ();
+//		for (int x = 0; x < this.mapSize; x++) {
+//			for (int y = 0; y < this.mapSize; y++) {
+//				Vector2 xy = new Vector2(x,y);
+//				if (!tiles[xy].Unoccupied) {
+//					agents.Add(tiles[xy].occupiedAgent);
+//				}
+//			}
+//		}
+//
+//		return agents;
+//	}
 
 
 }

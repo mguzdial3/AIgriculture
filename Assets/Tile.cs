@@ -3,6 +3,7 @@ using System.Collections;
 
 public class Tile {
 	public int x, y;
+	public Vector2 pos;
 	public Agent occupiedAgent = null;
 	public bool Unoccupied{get{return occupiedAgent==null;}}
 
@@ -13,6 +14,7 @@ public class Tile {
 		this.y = _y;
 		this.water = _water;
 		this.nutrients = _nutrients;
+		this.pos = new Vector2 (x, y);
 	}
 	
 }
