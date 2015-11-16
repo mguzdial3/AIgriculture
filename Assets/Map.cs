@@ -85,51 +85,61 @@ public class Map : MonoBehaviour {
 			currTime = 0;
 
 			//Update each agent
-			List<Agent> toRemove = new List<Agent>();
-			foreach(Agent a in agents){
+			List<Agent> toRemove = new List<Agent> ();
+			foreach (Agent a in agents) {
 				//Debug.Log ("Agent: "+a.id+" has life "+a.attributes[Lifespan]+" has hunger "+a.attributes[Hunger]+" pos "+a.currentTile.pos);
-				a.Update();
+				a.Update ();
 
-				if(a.CheckForDeath()){
-					toRemove.Add(a);
+				if (a.CheckForDeath ()) {
+					toRemove.Add (a);
 				}
 			}
 
-			foreach( Agent dead in toRemove){
-				agents.Remove(dead);
+			foreach (Agent dead in toRemove) {
+				agents.Remove (dead);
 			}
 
 			//Update the renderer
-			mapRenderer.UpdateMapRender(this);
+			mapRenderer.UpdateMapRender (this);
 		}
 
 
-		if(Input.GetKeyDown(KeyCode.Space)){
+		if (Input.GetKeyDown (KeyCode.Space)) {
 			addNutrients = !addNutrients;
-			Debug.Log("Add nuritents: "+addNutrients);
+			Debug.Log ("Add nuritents: " + addNutrients);
 		}
 
 		if (coolDown <= 0) {
-			if(Input.GetMouseButton(0)){
+			if (Input.GetMouseButton (0)) {
 
 
-				Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
-				Vector2 mousePos = new Vector2((int)worldPos.x, (int)worldPos.y);
-				Debug.Log ("Mouse Pos: "+mousePos);
-				if (tiles.ContainsKey(mousePos)){
-					if(addNutrients){
-						tiles[mousePos].nutrients+=10;
-					}
-					else{
-						tiles[mousePos].water+=10;
+				Vector3 worldPos = Camera.main.ScreenToWorldPoint (new Vector3 (Input.mousePosition.x, Input.mousePosition.y, 10));
+				Vector2 mousePos = new Vector2 ((int)worldPos.x, (int)worldPos.y);
+				Debug.Log ("Mouse Pos: " + mousePos);
+				if (tiles.ContainsKey (mousePos)) {
+					if (addNutrients) {
+						tiles [mousePos].nutrients += 10;
+					} else {
+						tiles [mousePos].water += 10;
 					}
 					coolDown = COOL_DOWN_MAX;
 				}
 			}
 		} else {
-			coolDown-=Time.deltaTime;
+			coolDown -= Time.deltaTime;
 		}
+	}
 		
+	public Tile[] GetAdjacentTilesOpen(Tile currentTile) {
+		Tile[] adjacentTiles = this.GetAdjacentTiles (currentTile);
+		List<Tile> openTiles = new List<Tile> ();
+
+		foreach (Tile t in adjacentTiles) {
+			if (t.Unoccupied) {
+				openTiles.Add(t);
+			}
+		}
+		return openTiles.ToArray();
 	}
 
 //	public List<Agent> GetMapAgents() {
