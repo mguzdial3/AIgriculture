@@ -20,21 +20,23 @@ public class MovePrey : AbstractState {
 	public override void Effect (Agent a){
 		// move toward target
 
-//		Agent prey = nearestTarget(a, Map.Instance.agents);
-//		Vector2 dist = prey.currentTile.pos - a.currentTile.pos;
-//		if (dist.x < dist.y) {
-//			if (dist.x < 0) {
-//
-//			}
-//		} else {
-//
-//		}
-//
-		// TODO: update me! NOT FINISHED
-//		int idx = Random.Range(0, prey.Count); // pick random prey to attack
-//		a.currentTile.occupiedAgent = null;
-//		a.currentTile = prey [idx];
-//		slots [idx].occupiedAgent = a;
+		Agent prey = nearestTarget(a, Map.Instance.agents);
+		Vector2 ppos = prey.currentTile.pos;
+		Tile[] openTiles = Map.Instance.GetAdjacentTilesOpen (a.currentTile);
+
+		float minDist = Mathf.Infinity;
+		Tile minTile = null;
+		foreach (Tile t in openTiles) {
+			float dist = (ppos - t.pos).sqrMagnitude;
+			if (dist < minDist) {
+				minDist = dist;
+				minTile = t;
+			}
+		}
+
+		a.currentTile.occupiedAgent = null;
+		a.currentTile = minTile;
+		minTile.occupiedAgent = a;
 	}
 
 	public Agent nearestTarget(Agent a, List<Agent> targets) {
@@ -43,7 +45,7 @@ public class MovePrey : AbstractState {
 
 		Agent minAgent = null;
 		foreach (Agent t in targets) {
-			float dist = (xy - new Vector2(t.currentTile.x, t.currentTile.y)).sqrMagnitude;
+			float dist = (xy - t.currentTile.pos).sqrMagnitude;
 			if (dist < minDist) {
 				minDist = dist;
 				minAgent = t;

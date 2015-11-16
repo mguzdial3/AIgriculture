@@ -61,6 +61,18 @@ public class Map : MonoBehaviour {
 		return possibleAdjacentTiles.ToArray ();
 	}
 
+	public Tile[] GetAdjacentTilesOpen(Tile currentTile) {
+		Tile[] adjacentTiles = this.GetAdjacentTiles (currentTile);
+		List<Tile> openTiles = new List<Tile> ();
+
+		foreach (Tile t in adjacentTiles) {
+			if (t.Unoccupied) {
+				openTiles.Add(t);
+			}
+		}
+		return openTiles.ToArray();
+	}
+
 //	public List<Agent> GetMapAgents() {
 //		List<Agent> agents = new List<Agent> ();
 //		for (int x = 0; x < this.mapSize; x++) {
