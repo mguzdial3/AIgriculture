@@ -18,8 +18,10 @@ public class Agent {
 		attributes.Add (Map.Lifespan, lifespan);
 
 		foreach (AbstractState state in states) {
-			foreach(string requirement in state.AttributesRequired){
-				attributes[requirement] = Map.STARTING_ATTRIBUTE_VALUE;
+			if(state.AttributesRequired!=null){
+				foreach(string requirement in state.AttributesRequired){
+					attributes[requirement] = Map.STARTING_ATTRIBUTE_VALUE;
+				}
 			}
 		}
 
@@ -39,8 +41,17 @@ public class Agent {
 
 
 	public bool CheckForDeath(){
-		attributes ["Lifespan"] -= 1;
+		for (int i = 0; i<Map.allAttributes.Length; i++) {
+			if(attributes.ContainsKey(Map.allAttributes[i])){
+				attributes[Map.allAttributes[i]] -=1;
+			}
+			                                              
+		}
 
+		return IsDead ();
+	}
+
+	public bool IsDead(){
 		foreach (KeyValuePair<string, int> kvp in attributes) {
 			if (kvp.Value<=0){
 				return true;

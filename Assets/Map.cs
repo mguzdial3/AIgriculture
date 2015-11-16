@@ -12,7 +12,7 @@ public class Map : MonoBehaviour {
 	public static readonly string Hunger = "Hunger";
 	public static readonly string Thirst = "Thirst";
 	public static readonly string Mobile = "Mobile";
-
+	public static string[] allAttributes = new string[]{Lifespan, Hunger, Thirst, Mobile};
 
 	//SINGLETON
 	public static Map Instance;
@@ -23,6 +23,10 @@ public class Map : MonoBehaviour {
 
 	public int mapSize = 100;
 
+	//PLAYER ACTIONS
+	private  bool addNutrients = true;//If not add nutrients, add water
+	private float coolDown = 0;
+	private float COOL_DOWN_MAX = 0.2f;
 
 	public MapRenderer mapRenderer;
 
@@ -37,7 +41,17 @@ public class Map : MonoBehaviour {
 				mapRenderer.SpawnTile(i,j,tiles[new Vector2(i,j)].water, tiles[new Vector2(i,j)].nutrients);
 			}
 		}
-
+		//TEST
+		agents = new List<Agent> ();
+		Agent testAgent = new Agent (0, 10000, new AbstractState[]{new EatNutrients(5),new MoveRandom()}, tiles [new Vector2 (3, 3)]);
+		Agent hunterAgent = new Agent (1, 10000, new AbstractState[]{new EatAgent(500),new MovePrey()}, tiles [new Vector2 (8, 3)]);
+		Agent hunterAgent2 = new Agent (2, 10000, new AbstractState[]{new EatAgent(500),new MovePrey()}, tiles [new Vector2 (3, 8)]);
+		mapRenderer.SpawnAgent (3, 3, testAgent);
+		mapRenderer.SpawnAgent (8, 3, hunterAgent);
+		mapRenderer.SpawnAgent (3, 8, hunterAgent2);
+		agents.Add (testAgent);
+		agents.Add (hunterAgent2);
+		agents.Add (hunterAgent);
 
 	}
 
@@ -59,6 +73,63 @@ public class Map : MonoBehaviour {
 			}
 		}
 		return possibleAdjacentTiles.ToArray ();
+	}
+
+	//ALTER THIS TO ALTER 'TIME'
+	float currTime = 0;
+	const float MAX_TIME = 0.1f;
+	void Update(){
+		if (currTime < MAX_TIME) {
+			currTime += Time.deltaTime;
+		} else {
+			currTime = 0;
+
+			//Update each agent
+			List<Agent> toRemove = new List<Agent>();
+			foreach(Agent a in agents){
+				//Debug.Log ("Agent: "+a.id+" has life "+a.attributes[Lifespan]+" has hunger "+a.attributes[Hunger]+" pos "+a.currentTile.pos);
+				a.Update();
+
+				if(a.CheckForDeath()){
+					toRemove.Add(a);
+				}
+			}
+
+			foreach( Agent dead in toRemove){
+				agents.Remove(dead);
+			}
+
+			//Update the renderer
+			mapRenderer.UpdateMapRender(this);
+		}
+
+
+		if(Input.GetKeyDown(KeyCode.Space)){
+			addNutrients = !addNutrients;
+			Debug.Log("Add nuritents: "+addNutrients);
+		}
+
+		if (coolDown <= 0) {
+			if(Input.GetMouseButton(0)){
+
+
+				Vector3 worldPos = Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, 10));
+				Vector2 mousePos = new Vector2((int)worldPos.x, (int)worldPos.y);
+				Debug.Log ("Mouse Pos: "+mousePos);
+				if (tiles.ContainsKey(mousePos)){
+					if(addNutrients){
+						tiles[mousePos].nutrients+=10;
+					}
+					else{
+						tiles[mousePos].water+=10;
+					}
+					coolDown = COOL_DOWN_MAX;
+				}
+			}
+		} else {
+			coolDown-=Time.deltaTime;
+		}
+		
 	}
 
 //	public List<Agent> GetMapAgents() {

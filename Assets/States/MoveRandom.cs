@@ -8,9 +8,8 @@ public class MoveRandom : AbstractState {
 	}
 	
 	public override bool Precondition (Agent a){
-
 		foreach(Tile t in Map.Instance.GetAdjacentTiles(a.currentTile)) {
-			if (!t.Unoccupied) { 
+			if (t.Unoccupied) { 
 				return true;
 			}
 		}
@@ -21,7 +20,7 @@ public class MoveRandom : AbstractState {
 		List<Tile> slots = new List<Tile> ();
 		
 		foreach (Tile t in Map.Instance.GetAdjacentTiles(a.currentTile)) {
-			if (!t.Unoccupied) {
+			if (t.Unoccupied) {
 				slots.Add(t);
 			}
 		}
