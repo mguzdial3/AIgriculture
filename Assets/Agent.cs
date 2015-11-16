@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using UnityEngine;
+using System.Collections.Generic;
 
 public class Agent {
 	public Dictionary<string, int> attributes;
@@ -52,7 +53,9 @@ public class Agent {
 	}
 
 	public bool IsDead(){
+		Debug.Log ("ID " + id);
 		foreach (KeyValuePair<string, int> kvp in attributes) {
+			Debug.Log ("   KVP "+kvp);
 			if (kvp.Value<=0){
 				return true;
 			}

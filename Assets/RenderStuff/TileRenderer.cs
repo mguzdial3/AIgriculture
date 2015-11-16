@@ -19,7 +19,6 @@ public class TileRenderer : MonoBehaviour {
 	}
 
 	public void RecolorTile(){
-		Color preColor = mine.material.color;
 		mine.material.color = Color.Lerp (Color.Lerp (new Color32 (133, 87, 35, 255), new Color32 (78, 97, 114, 255), waterVal), new Color32 (102, 141, 60, 255), nutrientsVal);
 	}
 }

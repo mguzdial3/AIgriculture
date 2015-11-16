@@ -8,10 +8,12 @@ public class MovePrey : AbstractState {
 	}
 	
 	public override bool Precondition (Agent a){
-		
-		foreach(Tile t in Map.Instance.GetAdjacentTiles(a.currentTile)) {
-			if (!t.Unoccupied) { 
-				return true;
+		Agent prey = nearestTarget(a, Map.Instance.agents);
+		if (prey != null) {
+			foreach (Tile t in Map.Instance.GetAdjacentTiles(a.currentTile)) {
+				if (t.Unoccupied) { 
+					return true;
+				}
 			}
 		}
 		return false;
@@ -45,10 +47,12 @@ public class MovePrey : AbstractState {
 
 		Agent minAgent = null;
 		foreach (Agent t in targets) {
-			float dist = (xy - t.currentTile.pos).sqrMagnitude;
-			if (dist < minDist) {
-				minDist = dist;
-				minAgent = t;
+			if (t!=a){
+				float dist = (xy - t.currentTile.pos).sqrMagnitude;
+				if (dist < minDist) {
+					minDist = dist;
+					minAgent = t;
+				}
 			}
 		}
 

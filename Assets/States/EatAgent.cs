@@ -35,6 +35,7 @@ public class EatAgent : AbstractState {
 		int idx = Random.Range(0, prey.Count); // pick random prey to attack
 		a.attributes [Map.Hunger] += eatRate;
 		prey [idx].attributes [Map.Lifespan] -= eatRate;
+		Debug.Log (" I ate ");
 	}
 
 	// TODO: add non-cannibalism

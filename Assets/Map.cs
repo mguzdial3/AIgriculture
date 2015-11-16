@@ -43,12 +43,12 @@ public class Map : MonoBehaviour {
 		}
 		//TEST
 		agents = new List<Agent> ();
-		Agent testAgent = new Agent (0, 10000, new AbstractState[]{new EatNutrients(5),new MoveRandom()}, tiles [new Vector2 (3, 3)]);
-		Agent hunterAgent = new Agent (1, 10000, new AbstractState[]{new EatAgent(500),new MovePrey()}, tiles [new Vector2 (8, 3)]);
-		Agent hunterAgent2 = new Agent (2, 10000, new AbstractState[]{new EatAgent(500),new MovePrey()}, tiles [new Vector2 (3, 8)]);
+		Agent testAgent = new Agent (0, 100, new AbstractState[]{new EatNutrients(5),new MoveRandom()}, tiles [new Vector2 (3, 3)]);
+		Agent hunterAgent = new Agent (4, 100, new AbstractState[]{new EatAgent(10),new MovePrey()}, tiles [new Vector2 (8, 3)]);
+		Agent hunterAgent2 = new Agent (4, 100, new AbstractState[]{new EatAgentNoncannibal(10),new MovePreyNoncannibal()}, tiles [new Vector2 (3, 8)]);
 		mapRenderer.SpawnAgent (3, 3, testAgent);
-		mapRenderer.SpawnAgent (8, 3, hunterAgent);
-		mapRenderer.SpawnAgent (3, 8, hunterAgent2);
+		mapRenderer.SpawnAgent (9, 0, hunterAgent);
+		mapRenderer.SpawnAgent (0, 9, hunterAgent2);
 		agents.Add (testAgent);
 		agents.Add (hunterAgent2);
 		agents.Add (hunterAgent);
@@ -88,7 +88,10 @@ public class Map : MonoBehaviour {
 			List<Agent> toRemove = new List<Agent> ();
 			foreach (Agent a in agents) {
 				//Debug.Log ("Agent: "+a.id+" has life "+a.attributes[Lifespan]+" has hunger "+a.attributes[Hunger]+" pos "+a.currentTile.pos);
-				a.Update ();
+				float prob = ((float)a.attributes[Lifespan])/((float)a.MAX_LIFESPAN);
+				if (prob>Random.value){
+					a.Update ();
+				}
 
 				if (a.CheckForDeath ()) {
 					toRemove.Add (a);
