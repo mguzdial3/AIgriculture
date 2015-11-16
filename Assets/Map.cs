@@ -23,14 +23,22 @@ public class Map : MonoBehaviour {
 
 	public int mapSize = 100;
 
+
+	public MapRenderer mapRenderer;
+
 	void Awake(){
 		Instance = this;
-
+		mapRenderer.Init ();
+		tiles = new Dictionary<Vector2, Tile> ();
 		for(int i = 0; i<mapSize; i++){
 			for(int j= 0; j<mapSize; j++){
-				tiles.Add(new Vector2(i,j), new Tile(i, j, Random.Range(0, 100), Random.Range(0, 100)));
+				tiles.Add(new Vector2(i,j), new Tile(i, j, Random.Range(0, STARTING_ATTRIBUTE_VALUE), Random.Range(0, STARTING_ATTRIBUTE_VALUE)));
+
+				mapRenderer.SpawnTile(i,j,tiles[new Vector2(i,j)].water, tiles[new Vector2(i,j)].nutrients);
 			}
 		}
+
+
 	}
 
 	public Tile[] GetAdjacentTiles(Tile currentTile){
